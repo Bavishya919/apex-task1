@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>A Day in My Life</title>
+  <style>
+    :root {
+      --bg-light: linear-gradient(to right, #e0f7fa, #ffffff);
+      --bg-dark: linear-gradient(to right, #2d3436, #1e272e);
+      --text-light: #2d3436;
+      --text-dark: #ecf0f1;
+      --accent-light: #00b894;
+      --accent-dark: #74b9ff;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #cce7e8; /* fallback */
+      background-image: var(--bg-light);
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-size: cover;
+      color: var(--text-light);
+      transition: background 0.4s ease, color 0.4s ease;
+      padding: 20px;
+    }
+
+    body.dark {
+      background-color: #1c252b; /* fallback dark */
+      background-image: var(--bg-dark);
+      background-repeat: no-repeat;
+      background-attachment: fixed;
+      background-size: cover;
+      color: var(--text-dark);
+    }
+
+    h1 {
+      text-align: center;
+      color: var(--accent-light);
+      transition: color 0.3s ease;
+    }
+
+    body.dark h1 {
+      color: var(--accent-dark);
+    }
+
+    p.intro {
+      text-align: center;
+      font-size: 18px;
+      margin-bottom: 30px;
+    }
+
+    .timeline {
+      max-width: 700px;
+      margin: 0 auto;
+      border-left: 4px solid var(--accent-light);
+      padding-left: 20px;
+      position: relative;
+    }
+
+    body.dark .timeline {
+      border-left-color: var(--accent-dark);
+    }
+
+    .event {
+      margin-bottom: 40px;
+      position: relative;
+      opacity: 0;
+      transform: translateY(20px);
+      animation: fadeInUp 0.8s ease forwards;
+    }
+
+    .event:nth-child(1) {
+      animation-delay: 0.2s;
+    }
+
+    .event:nth-child(2) {
+      animation-delay: 0.4s;
+    }
+
+    .event:nth-child(3) {
+      animation-delay: 0.6s;
+    }
+
+    @keyframes fadeInUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .event::before {
+      content: '';
+      width: 14px;
+      height: 14px;
+      background-color: var(--accent-light);
+      border-radius: 50%;
+      position: absolute;
+      left: -30px;
+      top: 5px;
+    }
+
+    body.dark .event::before {
+      background-color: var(--accent-dark);
+    }
+
+    .event h3 {
+      margin: 0;
+      font-size: 20px;
+    }
+
+    .event p {
+      margin: 8px 0;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .checkbox {
+      margin-top: 10px;
+      font-size: 15px;
+      display: flex;
+      align-items: center;
+    }
+
+    .checkbox input[type="checkbox"] {
+      transform: scale(1.1);
+      margin-right: 8px;
+      cursor: pointer;
+    }
+
+    img {
+      display: block;
+      margin: 40px auto 20px;
+      width: 90%;
+      max-width: 600px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    button {
+      display: block;
+      margin: 20px auto;
+      padding: 12px 24px;
+      font-size: 16px;
+      background-color: var(--accent-light);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    body.dark button {
+      background-color: var(--accent-dark);
+    }
+
+    button:hover {
+      opacity: 0.9;
+    }
+
+    .toggle-container {
+      text-align: center;
+      margin-top: 30px;
+    }
+
+    .toggle-container label {
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    /* Progress bar container */
+    .progress-container {
+      max-width: 700px;
+      height: 20px;
+      background-color: #ddd;
+      border-radius: 10px;
+      margin: 30px auto 10px;
+      overflow: hidden;
+      box-shadow: inset 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    /* Progress bar itself */
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background-color: var(--accent-light);
+      border-radius: 10px;
+      transition: width 0.4s ease;
+    }
+
+    body.dark .progress-container {
+      background-color: #444;
+      box-shadow: inset 0 0 5px rgba(255,255,255,0.1);
+    }
+
+    body.dark .progress-bar {
+      background-color: var(--accent-dark);
+    }
+
+    /* Congratulatory message */
+    #completion-message {
+      text-align: center;
+      font-size: 18px;
+      color: var(--accent-light);
+      margin-top: 15px;
+      display: none;
+      animation: fadeIn 0.6s ease forwards;
+    }
+
+    body.dark #completion-message {
+      color: var(--accent-dark);
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+  </style>
+</head>
+<body>
+  <h1>A Day in My Life</h1>
+  <p class="intro">Here’s how I typically spend a balanced and productive day.</p>
+
+  <div class="timeline">
+    <div class="event">
+      <h3>🌞 Morning</h3>
+      <p>
+        I start my day at 6:30 AM with a cup of lemon water, followed by a quick workout and a healthy
+        breakfast.
+      </p>
+      <label class="checkbox"><input type="checkbox" /> Workout completed</label>
+    </div>
+
+    <div class="event">
+      <h3>📚 Afternoon</h3>
+      <p>
+        I dive into work or studies — usually coding, learning something new, or building small projects.
+      </p>
+      <label class="checkbox"><input type="checkbox" /> Studied / Worked on project</label>
+    </div>
+
+    <div class="event">
+      <h3>🌙 Evening</h3>
+      <p>
+        After dinner, I relax with a book or a documentary. I also reflect and journal before sleeping.
+      </p>
+      <label class="checkbox"><input type="checkbox" /> Journaled and reflected</label>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="progress-container" aria-label="Task completion progress">
+    <div class="progress-bar" id="progress-bar"></div>
+  </div>
+  <div id="completion-message">🎉 Great job! You completed all tasks for the day!</div>
+
+  <img
+    src="https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=1000&q=80"
+    alt="Relaxing evening scene"
+  />
+
+  <button onclick="revealFavorite()">Guess my favorite part of the day</button>
+
+  <div class="toggle-container">
+    <label>
+      <input type="checkbox" id="toggleTheme" />
+      Enable Dark Mode
+    </label>
+  </div>
+
+  <script>
+    function revealFavorite() {
+      alert("🌙 Evening is my favorite — it's when I unwind, reflect, and reset for tomorrow.");
+    }
+
+    // Dark mode toggle
+    const toggle = document.getElementById("toggleTheme");
+    toggle.addEventListener("change", () => {
+      document.body.classList.toggle("dark");
+    });
+
+    // Progress bar logic
+    const checkboxes = document.querySelectorAll('.checkbox input[type="checkbox"]');
+    const progressBar = document.getElementById('progress-bar');
+    const completionMessage = document.getElementById('completion-message');
+
+    function updateProgress() {
+      const total = checkboxes.length;
+      const checked = [...checkboxes].filter(cb => cb.checked).length;
+      const percent = (checked / total) * 100;
+      progressBar.style.width = percent + '%';
+
+      if (checked === total) {
+        completionMessage.style.display = 'block';
+      } else {
+        completionMessage.style.display = 'none';
+      }
+    }
+
+    checkboxes.forEach(cb => {
+      cb.addEventListener('change', updateProgress);
+    });
+
+    // Initialize progress on page load
+    updateProgress();
+  </script>
+</body>
+</html>
