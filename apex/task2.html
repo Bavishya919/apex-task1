@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>mini webpage</title>
+  <style>
+    :root {
+      --bg: #121212;
+      --surface: #1e1e1e;
+      --text: #ffffff;
+      --accent: #4caf50;
+      --error: #e53935;
+      --blue: #2196f3;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 20px;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: var(--accent);
+    }
+
+    nav {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    nav button {
+      margin: 0 10px;
+      padding: 10px 20px;
+      background: var(--blue);
+      border: none;
+      color: white;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    nav button:hover {
+      background: #1976d2;
+    }
+
+    .section {
+      display: none;
+      max-width: 500px;
+      margin: auto;
+      background: var(--surface);
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+    }
+
+    .active {
+      display: block;
+    }
+
+    input, textarea, button {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      border: 1px solid #444;
+      background: #2a2a2a;
+      color: var(--text);
+    }
+
+    input[type="submit"], .todo-section button {
+      background: var(--accent);
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    input[type="submit"]:hover, .todo-section button:hover {
+      background: #388e3c;
+    }
+
+    .error {
+      border-color: var(--error);
+      animation: shake 0.3s;
+    }
+
+    @keyframes shake {
+      0% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      50% { transform: translateX(5px); }
+      75% { transform: translateX(-5px); }
+      100% { transform: translateX(0); }
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      background: #2a2a2a;
+      padding: 10px;
+      margin-top: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 4px solid var(--blue);
+      animation: fadeIn 0.4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .remove-btn {
+      background: transparent;
+      border: none;
+      color: var(--error);
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        padding: 10px;
+      }
+
+      nav button {
+        margin: 5px;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1> Mini webpage</h1>
+
+  <nav>
+    <button onclick="showSection('home')">🏠 Home</button>
+    <button onclick="showSection('contact')">📬 Contact Form</button>
+    <button onclick="showSection('todo')">✅ To-Do List</button>
+  </nav>
+
+  <!-- Home Section -->
+  <div id="home" class="section active">
+    <p style="text-align: center;">Welcome to the mini project! Use the buttons above to navigate between the contact form and your to-do list.</p>
+  </div>
+
+  <!-- Contact Form Section -->
+  <div id="contact" class="section">
+    <h2>Contact Us</h2>
+    <form id="contactForm">
+      <input type="text" id="name" placeholder="Your Name" required />
+      <input type="email" id="email" placeholder="Your Email" required />
+      <textarea id="message" placeholder="Your Message" rows="4" required></textarea>
+      <input type="submit" value="Send Message" />
+    </form>
+  </div>
+
+  <!-- To-Do List Section -->
+  <div id="todo" class="section">
+    <h2>To-Do List</h2>
+    <div class="todo-section">
+      <input type="text" id="taskInput" placeholder="Enter a task..." />
+      <button onclick="addTask()">Add Task</button>
+      <ul id="taskList"></ul>
+    </div>
+  </div>
+
+  <script>
+    // Navigation handler
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(section => {
+        section.classList.remove('active');
+      });
+      document.getElementById(id).classList.add('active');
+    }
+
+    // Contact Form Validation
+    const form = document.getElementById("contactForm");
+
+    if (form) {
+      form.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        const name = document.getElementById("name");
+        const email = document.getElementById("email");
+        const message = document.getElementById("message");
+
+        let isValid = true;
+        [name, email, message].forEach(field => field.classList.remove("error"));
+
+        if (!name.value.trim()) {
+          name.classList.add("error");
+          isValid = false;
+        }
+
+        const emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+        if (!emailPattern.test(email.value.trim())) {
+          email.classList.add("error");
+          isValid = false;
+        }
+
+        if (!message.value.trim()) {
+          message.classList.add("error");
+          isValid = false;
+        }
+
+        if (isValid) {
+          alert("Message sent successfully!");
+          form.reset();
+        }
+      });
+    }
+
+    // To-Do List Logic
+    function addTask() {
+      const taskInput = document.getElementById("taskInput");
+      const taskList = document.getElementById("taskList");
+
+      if (taskInput && taskList) {
+        const task = taskInput.value.trim();
+        if (task !== "") {
+          const li = document.createElement("li");
+          li.innerHTML = `
+            ${task}
+            <button class="remove-btn" onclick="this.parentElement.remove()">×</button>
+          `;
+          taskList.appendChild(li);
+          taskInput.value = "";
+        }
+      }
+    }
+  </script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
