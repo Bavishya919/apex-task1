@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Basic Frontend Quiz</title>
+  <style>
+    body {
+      background-color: #121212;
+      color: #ffffff;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      padding: 20px;
+    }
+
+    h1, h2 {
+      text-align: center;
+    }
+
+    section {
+      margin-bottom: 50px;
+    }
+
+    /* Quiz Styles */
+    #quiz {
+      margin-bottom: 20px;
+    }
+
+    .quiz-question {
+      margin-bottom: 20px;
+    }
+
+    input[type="radio"] {
+      margin-right: 10px;
+    }
+
+    button {
+      background: #333;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    #quiz-result {
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    @media (max-width: 480px) {
+      body {
+        font-size: 14px;
+      }
+
+      button {
+        padding: 8px 16px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Basic Frontend Quiz</h1>
+
+    <!-- Quiz Section -->
+    <section class="quiz-section">
+      <h2>Quick Quiz</h2>
+      <div id="quiz"></div>
+      <button id="nextBtn" onclick="nextQuestion()">Next</button>
+      <button id="submitBtn" onclick="submitQuiz()" style="display:none;">Submit</button>
+      <p id="quiz-result"></p>
+    </section>
+
+    <!-- API Data -->
+    <section class="api-section">
+      <h2>Get a Random Joke</h2>
+      <button onclick="getJoke()">Fetch Joke</button>
+      <p id="joke-display"></p>
+    </section>
+  </div>
+
+  <script>
+    // ------------------- Quiz ------------------
+    const quizData = [
+      {
+        question: "What does HTML stand for?",
+        options: [
+          "Hyper Trainer Marking Language",
+          "Hyper Text Markup Language",
+          "Hyper Text Markdown Language",
+          "HighText Machine Language"
+        ],
+        correct: 1
+      },
+      {
+        question: "Which language is used for styling web pages?",
+        options: ["HTML", "CSS", "JavaScript", "PHP"],
+        correct: 1
+      },
+      {
+        question: "Which language is used to make web pages interactive?",
+        options: ["HTML", "CSS", "JavaScript", "Python"],
+        correct: 2
+      },
+      {
+        question: "What does CSS stand for?",
+        options: [
+          "Creative Style System",
+          "Cascading Sheet Style",
+          "Cascading Style Sheets",
+          "Colorful Style Sheets"
+        ],
+        correct: 2
+      },
+      {
+        question: "What is the correct syntax to select an element with id='demo' in CSS?",
+        options: ["#demo", ".demo", "demo", "*demo"],
+        correct: 0
+      },
+      {
+        question: "Which method is used to attach a click event in JavaScript?",
+        options: [".onClick()", "addEventListener()", "clickHandler()", "attachEvent()"],
+        correct: 1
+      }
+    ];
+
+    let currentQuestion = 0;
+    const answers = [];
+    const quizContainer = document.getElementById("quiz");
+    const nextBtn = document.getElementById("nextBtn");
+    const submitBtn = document.getElementById("submitBtn");
+    const resultEl = document.getElementById("quiz-result");
+
+    function showQuestion(index) {
+      const q = quizData[index];
+      quizContainer.innerHTML = `
+        <div class="quiz-question">
+          <p><strong>Question ${index + 1} of ${quizData.length}:</strong> ${q.question}</p>
+          ${q.options.map((opt, i) => `
+            <label>
+              <input type="radio" name="answer" value="${i}">
+              ${opt}
+            </label><br>
+          `).join('')}
+        </div>
+      `;
+
+      if (index === quizData.length - 1) {
+        nextBtn.style.display = "none";
+        submitBtn.style.display = "inline-block";
+      } else {
+        nextBtn.style.display = "inline-block";
+        submitBtn.style.display = "none";
+      }
+    }
+
+    function nextQuestion() {
+      const selected = document.querySelector('input[name="answer"]:checked');
+      if (!selected) {
+        alert("Please select an answer.");
+        return;
+      }
+
+      answers[currentQuestion] = Number(selected.value);
+      currentQuestion++;
+      showQuestion(currentQuestion);
+    }
+
+    function submitQuiz() {
+      const selected = document.querySelector('input[name="answer"]:checked');
+      if (!selected) {
+        alert("Please select an answer.");
+        return;
+      }
+
+      answers[currentQuestion] = Number(selected.value);
+
+      let score = 0;
+      quizData.forEach((q, i) => {
+        if (answers[i] === q.correct) score++;
+      });
+
+      quizContainer.innerHTML = "";
+      nextBtn.style.display = "none";
+      submitBtn.style.display = "none";
+
+      let feedback = score >= 6 ? "Excellent!" : score >= 4 ? "Good job!" : "Keep practicing!";
+      resultEl.textContent = `You scored ${score} out of ${quizData.length}. ${feedback}`;
+    }
+
+    // Initialize quiz
+    showQuestion(currentQuestion);
+
+    // ------------------- Joke API ------------------
+    async function getJoke() {
+      const res = await fetch('https://official-joke-api.appspot.com/random_joke');
+      const data = await res.json();
+      document.getElementById("joke-display").textContent = `${data.setup} - ${data.punchline}`;
+    }
+  </script>
+</body>
+</html>
+
